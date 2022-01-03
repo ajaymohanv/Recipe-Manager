@@ -2,34 +2,31 @@ package com.example.recipemanager.ui.recipes
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.recipemanager.viewmodels.MainViewModel
 import com.example.recipemanager.R
 import com.example.recipemanager.adapters.RecipesAdapter
 import com.example.recipemanager.databinding.FragmentRecipesBinding
-import com.example.recipemanager.util.Constants.API_KEY
 import com.example.recipemanager.util.NetworkListener
 import com.example.recipemanager.util.NetworkResult
 import com.example.recipemanager.util.observeOnce
+import com.example.recipemanager.viewmodels.MainViewModel
 import com.example.recipemanager.viewmodels.RecipesViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_recipes.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class RecipesFragment : Fragment() {
+class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private val args by navArgs<RecipesFragmentArgs>()
     private var _binding : FragmentRecipesBinding? = null
@@ -55,6 +52,7 @@ class RecipesFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.mainViewModel = mainViewModel
 
+        setHasOptionsMenu(true)
         setupRecyclerView()
 
         recipesViewModel.readBackOnline.observe(viewLifecycleOwner, {
@@ -103,7 +101,27 @@ class RecipesFragment : Fragment() {
         showShimmerEffect()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.recipes_menu,menu)
 
+        val search = menu.findItem(R.id.menu_search)
+        val searchView = search.actionView as? SearchView
+        searchView?.isSubmitButtonEnabled = true
+        searchView?.setOnQueryTextListener(this
+        )
+    }
+
+
+    override fun onQueryTextSubmit(p0: String?): Boolean {
+        if(p0 !=null){
+            searchApiData(p0)
+        }
+        return true
+    }
+
+    override fun onQueryTextChange(p0: String?): Boolean {
+        return true
+    }
 
     private fun requestApiData(){
         Log.d(TAG,"requestApiData Called")
@@ -132,6 +150,35 @@ class RecipesFragment : Fragment() {
 
             }
         })
+    }
+
+    private fun searchApiData(searchQuery : String){
+        showShimmerEffect()
+        mainViewModel.searchRecipes(recipesViewModel.applySearchQuery(searchQuery))
+        mainViewModel.searchedRecipesResponse.observe(viewLifecycleOwner, {response ->
+            when(response){
+                is NetworkResult.Success -> {
+                    hideShimmerEffect()
+                    val foodRecipe = response.data
+                    foodRecipe?.let {
+                        mAdapter.setData(it)
+                    }
+                }
+                is NetworkResult.Error -> {
+                    hideShimmerEffect()
+                    loadDataFromCache()
+                    Toast.makeText(
+                        requireContext(),
+                        response.message.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                is NetworkResult.Loading ->{
+                    showShimmerEffect()
+                }
+            }
+        })
+
     }
 
     private fun loadDataFromCache(){
