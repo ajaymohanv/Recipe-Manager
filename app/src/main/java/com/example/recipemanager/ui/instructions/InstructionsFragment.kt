@@ -1,16 +1,15 @@
 package com.example.recipemanager.ui.instructions
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebViewClient
+import androidx.fragment.app.Fragment
 import com.example.recipemanager.R
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import com.example.recipemanager.models.Result
+import com.example.recipemanager.util.Constants
+import kotlinx.android.synthetic.main.fragment_instructions.view.*
 
 
 class InstructionsFragment : Fragment() {
@@ -19,8 +18,17 @@ class InstructionsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_instructions, container, false)
+        val view = inflater.inflate(R.layout.fragment_instructions, container, false)
+
+        val args = arguments
+        val myBundle: Result? = args?.getParcelable(Constants.RECIPE_RESULT_KEY)
+
+
+        view.instructions_webView?.webViewClient = object : WebViewClient() {}
+        val websiteUrl = myBundle!!.sourceUrl
+        view.instructions_webView?.loadUrl(websiteUrl)
+
+        return view
     }
 
 
