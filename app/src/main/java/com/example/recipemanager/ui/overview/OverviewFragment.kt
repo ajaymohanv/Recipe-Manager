@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import coil.load
 import com.example.recipemanager.R
 import com.example.recipemanager.models.Result
+import com.example.recipemanager.util.Constants
 import kotlinx.android.synthetic.main.fragment_overview.view.*
 import org.jsoup.Jsoup
 
@@ -21,7 +22,7 @@ class OverviewFragment : Fragment() {
     ): View? {
 
         val args = arguments
-        val myBundle: Result? = args?.getParcelable("recipeBundle")
+        val myBundle: Result? = args?.getParcelable(Constants.RECIPE_RESULT_KEY)
 
         val view = inflater.inflate(R.layout.fragment_overview, container, false)
 
