@@ -30,7 +30,7 @@ class OverviewFragment : Fragment() {
         view.title_textView.text = myBundle?.title
         view.likes_textView.text = myBundle?.aggregateLikes.toString()
         view.time_textView.text = myBundle?.readyInMinutes.toString()
-        myBundle?.summary.let {
+        myBundle?.summary?.let {
             val summary = Jsoup.parse(it)?.text() ?: ""
             view.summary_textView.text = summary
         }
