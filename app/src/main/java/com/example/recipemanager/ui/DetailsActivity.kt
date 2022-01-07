@@ -11,6 +11,7 @@ import com.example.recipemanager.adapters.PagerAdapter
 import com.example.recipemanager.ui.ingredients.IngredientsFragment
 import com.example.recipemanager.ui.instructions.InstructionsFragment
 import com.example.recipemanager.ui.overview.OverviewFragment
+import com.example.recipemanager.util.Constants
 import kotlinx.android.synthetic.main.activity_details.*
 import java.lang.reflect.InvocationTargetException
 
@@ -39,7 +40,7 @@ class DetailsActivity : AppCompatActivity() {
         val resultBundle = Bundle()
         try {
             if (args.result != null) {
-                resultBundle.putParcelable("recipeBundle", args.result)
+                resultBundle.putParcelable(Constants.RECIPE_RESULT_KEY, args.result)
             }
         } catch (e : InvocationTargetException) {
             e.cause?.printStackTrace();
