@@ -2,6 +2,7 @@ package com.example.recipemanager.data.database
 
 import androidx.room.*
 import com.example.recipemanager.data.database.entities.FavouritesEntity
+import com.example.recipemanager.data.database.entities.FoodJokeEntity
 import com.example.recipemanager.data.database.entities.RecipesEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -25,5 +26,13 @@ interface RecipesDao {
 
     @Query("DELETE FROM favourite_recipes_table")
     suspend fun deleteAllFavouriteRecipes()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFoodJoke(foodJokeEntity: FoodJokeEntity)
+
+    @Query("SELECT * FROM food_joke_table ORDER BY id ASC")
+    fun readFoodJoke(): Flow<List<FoodJokeEntity>>
+
+
 
 }
