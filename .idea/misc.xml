@@ -13,8 +13,10 @@
         <entry key="..\:/Users/AjayMohan/AndroidStudioProjects/RecipeManager/app/src/main/res/layout/recipes_row_layout.xml" value="0.34075723830734966" />
         <entry key="..\:/Users/AjayMohan/AndroidStudioProjects/RecipeManager/app/src/main/res/menu/bottom_nav_menu.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/gradient_overlay.xml" value="0.209375" />
+        <entry key="app/src/main/res/drawable/ic_splash_screen_light.xml" value="0.209375" />
         <entry key="app/src/main/res/layout/activity_details.xml" value="0.1" />
         <entry key="app/src/main/res/layout/favourite_recipes_row_layout.xml" value="0.19322916666666667" />
+        <entry key="app/src/main/res/layout/fragment_food_joke.xml" value="0.18" />
         <entry key="app/src/main/res/layout/fragment_ingredients.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_instructions.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_overview.xml" value="0.33" />
@@ -25,6 +27,7 @@
         <entry key="app/src/main/res/menu/details_menu.xml" value="0.18055555555555555" />
         <entry key="app/src/main/res/menu/favourite_recipes_menu.xml" value="0.1" />
         <entry key="app/src/main/res/menu/favourites_contextual_menu.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/food_joke_menu.xml" value="0.1" />
         <entry key="app/src/main/res/menu/recipes_menu.xml" value="0.19322916666666667" />
       </map>
     </option>
