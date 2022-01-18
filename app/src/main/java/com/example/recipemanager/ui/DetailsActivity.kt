@@ -19,6 +19,7 @@ import com.example.recipemanager.ui.overview.OverviewFragment
 import com.example.recipemanager.util.Constants
 import com.example.recipemanager.viewmodels.MainViewModel
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.reflect.InvocationTargetException
 
@@ -65,16 +66,19 @@ class DetailsActivity : AppCompatActivity() {
         }
 
 
-        val adapter = PagerAdapter(
-            titles,
+        val pagerAdapter = PagerAdapter(
             fragments,
             resultBundle,
-            supportFragmentManager
+            this
         )
 
-        binding.viewPager.adapter = adapter
-        binding.tabLayout.setupWithViewPager(binding.viewPager)
+        binding.viewPager.apply {
+            adapter = pagerAdapter
+        }
 
+        TabLayoutMediator(binding.tabLayout,binding.viewPager){ tab, position ->
+            tab.text = titles[position]
+        }.attach()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
