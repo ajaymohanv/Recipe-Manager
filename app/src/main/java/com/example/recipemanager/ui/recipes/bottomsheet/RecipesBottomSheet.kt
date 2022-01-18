@@ -15,15 +15,17 @@ import com.example.recipemanager.viewmodels.RecipesViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import java.lang.Exception
 import java.util.*
 
 
 class RecipesBottomSheet : BottomSheetDialogFragment() {
 
-    private var _binding : RecipesBottomSheetBinding? = null
-    private val binding = _binding!!
-
     private lateinit var recipesViewModel: RecipesViewModel
+
+    private var _binding: RecipesBottomSheetBinding? = null
+    private val binding get() = _binding!!
+
     private var mealTypeChip = DEFAULT_MEAL_TYPE
     private var mealTypeChipId = 0
     private var dietTypeChip = DEFAULT_DIET_TYPE
@@ -40,6 +42,13 @@ class RecipesBottomSheet : BottomSheetDialogFragment() {
     ): View {
         // Inflate the layout for this fragment
         _binding = RecipesBottomSheetBinding.inflate(inflater, container, false)
+
+        recipesViewModel.readMealAndDietType.asLiveData().observe(viewLifecycleOwner, { value ->
+            mealTypeChip = value.selectedMealType
+            dietTypeChip = value.selectedDietType
+            updateChip(value.selectedMealTypeId, binding.mealTypeChipGroup)
+            updateChip(value.selectedDietTypeId, binding.dietTypeChipGroup)
+        })
 
         binding.mealTypeChipGroup.setOnCheckedChangeListener { group, selectedChipId ->
             val chip = group.findViewById<Chip>(selectedChipId)
@@ -66,20 +75,7 @@ class RecipesBottomSheet : BottomSheetDialogFragment() {
             findNavController().navigate(action)
         }
 
-        recipesViewModel.readMealAndDietType.asLiveData().observe(viewLifecycleOwner, {
-            mealTypeChip = it.selectedMealType
-            dietTypeChip = it.selectedDietType
-            updateChip(it.selectedMealTypeId, binding.mealTypeChipGroup)
-            updateChip(it.selectedDietTypeId, binding.dietTypeChipGroup)
-        })
-
-
         return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun updateChip(chipId: Int, chipGroup: ChipGroup) {
@@ -92,5 +88,8 @@ class RecipesBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
