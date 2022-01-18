@@ -1,8 +1,12 @@
 package com.example.recipemanager.data
 
 import android.content.Context
-import androidx.datastore.DataStore
+import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.*
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.preferencesKey
 import com.example.recipemanager.util.Constants.DEFAULT_DIET_TYPE
 import com.example.recipemanager.util.Constants.DEFAULT_MEAL_TYPE
 import com.example.recipemanager.util.Constants.PREFERENCES_BACK_ONLINE
