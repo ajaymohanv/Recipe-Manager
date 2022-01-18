@@ -12,6 +12,7 @@ import androidx.navigation.navArgs
 import com.example.recipemanager.R
 import com.example.recipemanager.adapters.PagerAdapter
 import com.example.recipemanager.data.database.entities.FavouritesEntity
+import com.example.recipemanager.databinding.ActivityDetailsBinding
 import com.example.recipemanager.ui.ingredients.IngredientsFragment
 import com.example.recipemanager.ui.instructions.InstructionsFragment
 import com.example.recipemanager.ui.overview.OverviewFragment
@@ -19,11 +20,12 @@ import com.example.recipemanager.util.Constants
 import com.example.recipemanager.viewmodels.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_details.*
 import java.lang.reflect.InvocationTargetException
 
 @AndroidEntryPoint
 class DetailsActivity : AppCompatActivity() {
+
+    private lateinit var binding : ActivityDetailsBinding
 
     private val args by navArgs<DetailsActivityArgs>()
     private val mainViewModel : MainViewModel by viewModels()
@@ -33,10 +35,12 @@ class DetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_details)
 
-        setSupportActionBar(toolBar)
-        toolBar.setTitleTextColor(ContextCompat.getColor(this, R.color.white))
+        binding = ActivityDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        setSupportActionBar(binding.toolBar)
+        binding.toolBar.setTitleTextColor(ContextCompat.getColor(this, R.color.white))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val fragments = ArrayList<Fragment>()
@@ -68,8 +72,8 @@ class DetailsActivity : AppCompatActivity() {
             supportFragmentManager
         )
 
-        viewPager.adapter = adapter
-        tabLayout.setupWithViewPager(viewPager)
+        binding.viewPager.adapter = adapter
+        binding.tabLayout.setupWithViewPager(binding.viewPager)
 
     }
 
@@ -136,7 +140,7 @@ class DetailsActivity : AppCompatActivity() {
 
     private fun showSnackBar(message : String) {
         Snackbar.make(
-            detailsLayout,
+            binding.detailsLayout,
             message,
             Snackbar.LENGTH_SHORT
         ).setAction("Okay") {}
