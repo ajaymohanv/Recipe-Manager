@@ -1,8 +1,6 @@
 package com.example.recipemanager.data
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.dataStore
 import androidx.datastore.preferences.*
 import androidx.datastore.preferences.core.*
 import com.example.recipemanager.util.Constants.DEFAULT_DIET_TYPE
@@ -14,7 +12,7 @@ import com.example.recipemanager.util.Constants.PREFERENCES_MEAL_TYPE
 import com.example.recipemanager.util.Constants.PREFERENCES_MEAL_TYPE_ID
 import com.example.recipemanager.util.Constants.PREFERENCES_NAME
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.android.scopes.ActivityRetainedScoped
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -24,7 +22,7 @@ import javax.inject.Inject
 
 private val Context.dataStore by preferencesDataStore(name = PREFERENCES_NAME)
 
-@ActivityRetainedScoped
+@ViewModelScoped
 class DataStoreRepository @Inject constructor(@ApplicationContext private val context: Context) {
 
 
