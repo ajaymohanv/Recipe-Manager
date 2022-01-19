@@ -31,6 +31,7 @@ class DetailsActivity : AppCompatActivity() {
     private val args by navArgs<DetailsActivityArgs>()
     private val mainViewModel : MainViewModel by viewModels()
 
+    private lateinit var menuItem : MenuItem
     private var recipeSaved = false
     private var savedRecipeId = 0
 
@@ -83,8 +84,8 @@ class DetailsActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.details_menu, menu)
-        val menuItem = menu?.findItem(R.id.save_to_favourites_menu)
-        checkSavedRecipes(menuItem!!)
+        menuItem = menu!!.findItem(R.id.save_to_favourites_menu)
+        checkSavedRecipes(menuItem)
         return true
     }
 
@@ -109,8 +110,6 @@ class DetailsActivity : AppCompatActivity() {
                         savedRecipeId = savedRecipe.id
                         recipeSaved = true
                         break
-                    } else{
-                        changeMenuItemColour(menuItem,R.color.white)
                     }
                 }
             }catch (e : java.lang.Exception){
@@ -153,5 +152,11 @@ class DetailsActivity : AppCompatActivity() {
 
     private fun changeMenuItemColour(item: MenuItem, colour: Int) {
         item.icon.setTint(ContextCompat.getColor(this,colour))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        changeMenuItemColour(menuItem,R.color.white)
+
     }
 }
