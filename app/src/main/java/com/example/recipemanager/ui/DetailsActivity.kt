@@ -12,31 +12,37 @@ import androidx.navigation.navArgs
 import com.example.recipemanager.R
 import com.example.recipemanager.adapters.PagerAdapter
 import com.example.recipemanager.data.database.entities.FavouritesEntity
+import com.example.recipemanager.databinding.ActivityDetailsBinding
 import com.example.recipemanager.ui.ingredients.IngredientsFragment
 import com.example.recipemanager.ui.instructions.InstructionsFragment
 import com.example.recipemanager.ui.overview.OverviewFragment
 import com.example.recipemanager.util.Constants
 import com.example.recipemanager.viewmodels.MainViewModel
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_details.*
 import java.lang.reflect.InvocationTargetException
 
 @AndroidEntryPoint
 class DetailsActivity : AppCompatActivity() {
 
+    private lateinit var binding : ActivityDetailsBinding
+
     private val args by navArgs<DetailsActivityArgs>()
     private val mainViewModel : MainViewModel by viewModels()
 
+    private lateinit var menuItem : MenuItem
     private var recipeSaved = false
     private var savedRecipeId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_details)
 
-        setSupportActionBar(toolBar)
-        toolBar.setTitleTextColor(ContextCompat.getColor(this, R.color.white))
+        binding = ActivityDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        setSupportActionBar(binding.toolBar)
+        binding.toolBar.setTitleTextColor(ContextCompat.getColor(this, R.color.white))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val fragments = ArrayList<Fragment>()
@@ -61,22 +67,26 @@ class DetailsActivity : AppCompatActivity() {
         }
 
 
-        val adapter = PagerAdapter(
-            titles,
+        val pagerAdapter = PagerAdapter(
             fragments,
             resultBundle,
-            supportFragmentManager
+            this
         )
 
-        viewPager.adapter = adapter
-        tabLayout.setupWithViewPager(viewPager)
+        binding.viewPager.isUserInputEnabled = false
+        binding.viewPager.apply {
+            adapter = pagerAdapter
+        }
 
+        TabLayoutMediator(binding.tabLayout,binding.viewPager){ tab, position ->
+            tab.text = titles[position]
+        }.attach()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.details_menu, menu)
-        val menuItem = menu?.findItem(R.id.save_to_favourites_menu)
-        checkSavedRecipes(menuItem!!)
+        menuItem = menu!!.findItem(R.id.save_to_favourites_menu)
+        checkSavedRecipes(menuItem)
         return true
     }
 
@@ -101,8 +111,6 @@ class DetailsActivity : AppCompatActivity() {
                         savedRecipeId = savedRecipe.id
                         recipeSaved = true
                         break
-                    } else{
-                        changeMenuItemColour(menuItem,R.color.white)
                     }
                 }
             }catch (e : java.lang.Exception){
@@ -136,7 +144,7 @@ class DetailsActivity : AppCompatActivity() {
 
     private fun showSnackBar(message : String) {
         Snackbar.make(
-            detailsLayout,
+            binding.detailsLayout,
             message,
             Snackbar.LENGTH_SHORT
         ).setAction("Okay") {}
@@ -145,5 +153,11 @@ class DetailsActivity : AppCompatActivity() {
 
     private fun changeMenuItemColour(item: MenuItem, colour: Int) {
         item.icon.setTint(ContextCompat.getColor(this,colour))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        changeMenuItemColour(menuItem,R.color.white)
+
     }
 }
